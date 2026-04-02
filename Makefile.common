@@ -53,6 +53,15 @@ endif
 # touch whatever comes after here.
 ######################################################################
 
+# Propagate USE_SCUMM_API make variable into the preprocessor and linker
+ifdef USE_SCUMM_API
+DEFINES += -DUSE_SCUMM_API
+# httplib requires Winsock2 on Windows
+ifdef WIN32
+LIBS += -lws2_32
+endif
+endif
+
 # Concat DEFINES and INCLUDES to form the CPPFLAGS
 CPPFLAGS := $(DEFINES) $(INCLUDES)
 

@@ -105,6 +105,13 @@ MODULE_OBJS += \
 	debugger/resource.o
 endif
 
+ifdef USE_SCUMM_API
+MODULE_OBJS += \
+	api/scummapi.o \
+	api/statebuilder.o \
+	api/eventinstrumentation.o
+endif
+
 ifdef ENABLE_SCUMM_7_8
 MODULE_OBJS += \
 	nut_renderer.o \

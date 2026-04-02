@@ -111,6 +111,11 @@
 
 #include "audio/mixer.h"
 
+#ifdef USE_SCUMM_API
+#include "scumm/api/scummapi.h"
+#include "scumm/api/eventinstrumentation.h"
+#endif
+
 using Common::File;
 
 namespace Scumm {
@@ -458,6 +463,14 @@ ScummEngine::ScummEngine(OSystem *syst, const DetectorResult &dr)
 
 
 ScummEngine::~ScummEngine() {
+#ifdef USE_SCUMM_API
+	if (_api) {
+		_api->stop();
+		delete _api;
+		_api = nullptr;
+	}
+#endif
+
 	delete _musicEngine;
 
 	// Delete the sound object earlier than the actors
@@ -1577,6 +1590,21 @@ Common::Error ScummEngine::init() {
 	_setupIsComplete = true;
 
 	syncSoundSettings();
+
+#ifdef USE_SCUMM_API
+	{
+		int apiPort = 9000;
+		if (ConfMan.hasKey("scumm_api_port"))
+			apiPort = ConfMan.getInt("scumm_api_port");
+		bool apiEnabled = ConfMan.hasKey("scumm_api_port");
+		if (ConfMan.hasKey("scumm_api"))
+			apiEnabled = ConfMan.getBool("scumm_api");
+		if (apiEnabled) {
+			_api = new ScummApi::ScummApiController(apiPort);
+			_api->start();
+		}
+	}
+#endif
 
 	return Common::kNoError;
 }
@@ -3206,6 +3234,11 @@ load_game:
 	}
 
 	_res->increaseExpireCounter();
+
+#ifdef USE_SCUMM_API
+	if (_api)
+		_api->tick(this);
+#endif
 
 	if (!isUsingOriginalGUI() || ((_game.version >= 3) || !isPaused()))
 		animateCursor();

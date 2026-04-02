@@ -1,7 +1,9 @@
-<Project>
- <PropertyGroup>
-   <UseMultiToolTask>true</UseMultiToolTask>
-   <EnforceProcessCountAcrossBuilds>true</EnforceProcessCountAcrossBuilds>
-   <PreferredToolArchitecture>x64</PreferredToolArchitecture>
- </PropertyGroup>
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SCUMMVM_LIBS>T:\Development\Games\ScummVmPipe\scummvm_libs\scummvm_libs_2015</SCUMMVM_LIBS>
+    <UseMultiToolTask>true</UseMultiToolTask>
+    <EnforceProcessCountAcrossBuilds>true</EnforceProcessCountAcrossBuilds>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
 </Project>

@@ -38,6 +38,10 @@
 #include "scumm/usage_bits.h"
 #include "scumm/util.h"
 
+#ifdef USE_SCUMM_API
+#include "scumm/api/eventinstrumentation.h"
+#endif
+
 namespace Scumm {
 
 byte Actor::kInvalidBox = 0;
@@ -1742,6 +1746,13 @@ void Actor::putActor(int dstX, int dstY, int newRoom) {
 	_pos.y = dstY;
 	_room = newRoom;
 	_needRedraw = true;
+
+#ifdef USE_SCUMM_API
+	{
+		const byte *nameData = getActorName();
+		ScummApi::onActorMoved(_number, nameData ? (const char *)nameData : "", dstX, dstY, newRoom);
+	}
+#endif
 
 	if (_vm->_game.heversion >= 62)
 		_needBgReset = true;

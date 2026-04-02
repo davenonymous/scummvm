@@ -71,6 +71,12 @@ namespace Graphics {
 class FontSJIS;
 }
 
+#ifdef USE_SCUMM_API
+namespace ScummApi {
+class ScummApiController;
+}
+#endif
+
 /**
  * This is the namespace of the SCUMM engine.
  *
@@ -521,6 +527,9 @@ class ScummEngine : public Engine, public Common::Serializable {
 	friend class MacV6Gui;
 	friend class LogicHEBasketball;
 	friend class ScummEditor;
+#ifdef USE_SCUMM_API
+	friend class ScummApi::ScummApiController;
+#endif
 
 public:
 	/* Put often used variables at the top.
@@ -565,6 +574,24 @@ protected:
 	bool _needsSoundUnpause = false;
 
 public:
+#ifdef USE_SCUMM_API
+	ScummApi::ScummApiController *_api = nullptr;
+
+	// Accessors exposing protected state to the SCUMM API state builder.
+	// These are intentionally narrow — each returns exactly what the API needs.
+	byte         apiGetNumActors()      const { return _numActors; }
+	Actor       *apiGetActor(int i)     const { return _actors[i]; }
+	int          apiGetNumInventory()   const { return _numInventory; }
+	uint16       apiGetInventoryObj(int i) const { return _inventory[i]; }
+	int          apiGetNumVerbs()       const { return _numVerbs; }
+	int          apiGetNumLocalObjects() const { return _numLocalObjects; }
+	const byte  *apiGetObjOrActorName(int obj) { return getObjOrActorName(obj); }
+	void         apiRunInputScript(int clickArea, int val, int mode) { runInputScript(clickArea, val, mode); }
+	int          apiConvertMessage(const byte *msg, byte *dst, int dstSize) { return convertMessageToString(msg, dst, dstSize); }
+	int          apiGetOwner(int obj) const { return getOwner(obj); }
+	int          apiGetPlayerActor() const { return _scummVars[VAR_EGO]; }
+#endif
+
 	// Constructor / Destructor
 	ScummEngine(OSystem *syst, const DetectorResult &dr);
 	~ScummEngine() override;

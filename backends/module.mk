@@ -27,6 +27,13 @@ MODULE_OBJS := \
 	saves/default/default-saves.o \
 	timer/default/default-timer.o
 
+ifdef USE_SCUMM_API
+MODULE_OBJS += \
+	api/httpserver.o \
+	api/apieventqueue.o \
+	api/apicommandqueue.o
+endif
+
 ifdef USE_HTTP
 MODULE_OBJS += \
 	networking/http/connectionmanager.o \

@@ -32,6 +32,10 @@
 #include "scumm/sound.h"
 #include "scumm/verbs.h"
 
+#ifdef USE_SCUMM_API
+#include "scumm/api/eventinstrumentation.h"
+#endif
+
 namespace Scumm {
 
 /* Start executing script 'script' with the given parameters */
@@ -1595,6 +1599,10 @@ int ScummEngine::resStrLen(const byte *src) {
 }
 
 void ScummEngine::beginCutscene(int *args) {
+#ifdef USE_SCUMM_API
+	ScummApi::onGameStateChanged("cutscene");
+#endif
+
 	int scr = _currentScript;
 	vm.slot[scr].cutsceneOverride++;
 
@@ -1649,6 +1657,10 @@ void ScummEngine::endCutscene() {
 
 	if (VAR(VAR_CUTSCENE_END_SCRIPT))
 		runScript(VAR(VAR_CUTSCENE_END_SCRIPT), 0, 0, args);
+
+#ifdef USE_SCUMM_API
+	ScummApi::onGameStateChanged("gameplay");
+#endif
 }
 
 void ScummEngine::abortCutscene() {

@@ -33,6 +33,10 @@
 #include "scumm/sound.h"
 #include "scumm/util.h"
 
+#ifdef USE_SCUMM_API
+#include "scumm/api/eventinstrumentation.h"
+#endif
+
 namespace Scumm {
 
 /**
@@ -153,6 +157,10 @@ void ScummEngine::startScene(int room, Actor *a, int objectNr) {
 
 	_currentRoom = room;
 	VAR(VAR_ROOM) = room;
+
+#ifdef USE_SCUMM_API
+	ScummApi::onSceneChanged(room, Common::String::format("Room %d", room).c_str());
+#endif
 
 #ifdef USE_TTS
 	if (_game.id == GID_PASS && _roomResource == 2 && room != _roomResource) {

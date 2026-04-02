@@ -45,6 +45,10 @@
 
 #include "scumm/ks_check.h"
 
+#ifdef USE_SCUMM_API
+#include "scumm/api/eventinstrumentation.h"
+#endif
+
 namespace Scumm {
 
 
@@ -105,6 +109,20 @@ void ScummEngine::printString(int m, const byte *msg) {
 		}
 
 		actorTalk(msg);
+#ifdef USE_SCUMM_API
+		{
+			int talkActor = getTalkingActor();
+			const char *speakerName = "";
+			if (talkActor > 0 && isValidActor(talkActor)) {
+				const byte *nameData = derefActor(talkActor, "printString")->getActorName();
+				if (nameData)
+					speakerName = (const char *)nameData;
+			}
+			byte textBuf[512];
+			convertMessageToString(msg, textBuf, sizeof(textBuf));
+			ScummApi::onDialogLine(talkActor, speakerName, (const char *)textBuf);
+		}
+#endif
 		break;
 	case 1:
 #ifdef USE_TTS

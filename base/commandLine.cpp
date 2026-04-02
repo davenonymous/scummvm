@@ -232,6 +232,10 @@ static const char HELP_STRING4[] =
 #ifdef ENABLE_SCUMM
 	"  --tempo=NUM              Set music tempo (in percent, 50-200) for SCUMM games\n"
 	"                           (default: 100)\n"
+#ifdef USE_SCUMM_API
+	"  --scumm_api              Enable the SCUMM HTTP REST API (default port: 9000)\n"
+	"  --scumm_api_port=NUM     Set the SCUMM HTTP API port (also enables the API)\n"
+#endif
 #endif
 #if defined(ENABLE_HE) && defined(USE_ENET)
 	"  --host-game              Host an online game for Moonbase Commander.\n"
@@ -367,6 +371,10 @@ void registerDefaults() {
 #endif
 #ifdef ENABLE_SCUMM
 	ConfMan.registerDefault("tempo", 0);
+#ifdef USE_SCUMM_API
+	ConfMan.registerDefault("scumm_api", false);
+	ConfMan.registerDefault("scumm_api_port", 9000);
+#endif
 #endif
 #if defined(ENABLE_HE) && defined(USE_ENET)
 	ConfMan.registerDefault("host_game", false);
@@ -1022,6 +1030,12 @@ Common::String parseCommandLine(Common::StringMap &settings, int argc, const cha
 #ifdef ENABLE_SCUMM
 			DO_LONG_OPTION_INT("tempo")
 			END_OPTION
+#ifdef USE_SCUMM_API
+			DO_LONG_OPTION_BOOL("scumm_api")
+			END_OPTION
+			DO_LONG_OPTION_INT("scumm_api_port")
+			END_OPTION
+#endif
 #endif
 
 #if defined(ENABLE_HE) && defined(USE_ENET)
